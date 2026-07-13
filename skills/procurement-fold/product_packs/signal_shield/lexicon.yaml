@@ -1,0 +1,27 @@
+pack_id: signal_shield
+display_name: 信号屏蔽器
+canonical_product: 信号屏蔽器
+
+target:
+  - 信号屏蔽器
+  - 手机信号屏蔽
+  - 无线信号屏蔽
+
+near:
+  - 屏蔽器
+  - 信号阻断
+
+related:
+  - 安检设备
+  - 考场设备
+
+confuse:
+  - 屏蔽门
+  - 电磁屏蔽室
+
+search_keywords:
+  - 信号屏蔽器
+  - 手机信号屏蔽
+
+high_value_systems: []
+systems: {}

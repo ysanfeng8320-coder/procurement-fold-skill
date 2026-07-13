@@ -1,0 +1,32 @@
+species_id: court
+display_name: 法院
+granularity: 法院本级（中院/基层院；法庭可排除）
+
+search_keywords:
+  - 人民法院
+  - 中级人民法院
+  - 高级人民法院
+
+bridge_prefixes:
+  - 法院
+  - 人民法院
+  - 中级人民法院
+
+include_name_keywords:
+  - 人民法院
+  - 中级人民法院
+  - 高级人民法院
+  - 铁路运输法院
+  - 海事法院
+
+exclude_name_keywords:
+  - 人民法庭
+  - 诉讼服务
+
+level_rules:
+  省级: [高级人民法院]
+  市级: [中级人民法院]
+  县级: [人民法院]
+  其他: []
+
+discovery_hint: 法院系统装订/档案/印控均有历史；陕甘本地样本通常厚于公安。

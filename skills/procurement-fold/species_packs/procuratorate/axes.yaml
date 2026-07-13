@@ -1,0 +1,5 @@
+axes:
+  level:
+    values: [省级, 市级, 县级, 其他]
+  seal_scene:
+    values: [办案用印, 公文用印, 未知]

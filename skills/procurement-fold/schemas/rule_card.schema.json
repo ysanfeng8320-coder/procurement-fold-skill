@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RuleCard",
+  "type": "object",
+  "required": ["id", "type", "if", "then", "confidence", "sources"],
+  "properties": {
+    "id": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["prior", "cooccurrence", "temporal_surge", "diffusion"]
+    },
+    "if": { "type": "string" },
+    "then": { "type": "string" },
+    "support": {
+      "type": "object",
+      "properties": {
+        "n": { "type": "integer" },
+        "baseline": { "type": ["number", "null"] },
+        "regions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "counterexamples": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "action_hint": { "type": "string" },
+    "sources": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "prior|bids|both"
+    }
+  }
+}

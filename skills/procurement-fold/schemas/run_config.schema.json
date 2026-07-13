@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FoldRunConfig",
+  "type": "object",
+  "required": ["product_pack", "discovery_regions", "action_regions"],
+  "properties": {
+    "product_pack": { "type": "string", "description": "pack id under product_packs/" },
+    "discovery_regions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Provinces used to learn transferable rules"
+    },
+    "action_regions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Provinces where leads are emitted"
+    },
+    "api_budget": { "type": "integer", "minimum": 0, "default": 500 },
+    "reuse_local": { "type": "boolean", "default": true },
+    "windows_months": {
+      "type": "array",
+      "items": { "type": "integer" },
+      "default": [1, 2]
+    },
+    "min_support": { "type": "integer", "default": 3 }
+  }
+}

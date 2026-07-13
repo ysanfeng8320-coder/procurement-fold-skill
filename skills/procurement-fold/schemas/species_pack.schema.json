@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpeciesPack",
+  "type": "object",
+  "required": ["species_id", "display_name", "include_name_keywords", "search_keywords"],
+  "properties": {
+    "species_id": { "type": "string" },
+    "display_name": { "type": "string" },
+    "search_keywords": { "type": "array", "items": { "type": "string" } },
+    "include_name_keywords": { "type": "array", "items": { "type": "string" } },
+    "exclude_name_keywords": { "type": "array", "items": { "type": "string" } },
+    "level_rules": { "type": "object" }
+  }
+}

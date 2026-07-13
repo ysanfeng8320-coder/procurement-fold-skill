@@ -1,0 +1,8 @@
+# 法院稳定属性轴
+axes:
+  org_form:
+    values: [机关本级, 专门法院, 其他]
+  level:
+    values: [省级, 市级, 县级, 其他]
+  seal_scene:
+    values: [案卷用印, 公文用印, 集中管章, 未知]

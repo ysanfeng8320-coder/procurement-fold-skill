@@ -1,0 +1,60 @@
+# 采集闸门 — 花钱拉数前必过
+# 被 kg_engine/fold/acquisition_gate.py 与场景发现流程读取
+
+version: 1
+
+# 办公货物/软件向：命中任一排除词 → 丢弃（不计入预算成果）
+exclude_title_keywords:
+  - 物业
+  - 保洁
+  - 食堂
+  - 餐饮
+  - 维保
+  - 运维服务
+  - 劳务派遣
+  - 保安服务
+  - 绿化养护
+  - 会议服务
+  - 印刷服务
+  - 刻章服务
+  - 公车
+  - 车辆租赁
+  - 加油
+  - 保险服务
+
+# 允许的品目方向（标题弱提示；不强制，供报告提示）
+prefer_title_keywords:
+  - 货物
+  - 设备
+  - 采购
+  - 软件
+  - 系统
+  - 信息化
+
+budget_modes:
+  test:
+    max_api_records: 200
+    description: 测流程；不准当大样本结论
+  formal:
+    max_api_records: 5000
+    description: 过闸后的硬投入上限；仍须关键词均分
+
+rules:
+  - id: exclude_services
+    required: true
+    text: 排除物业/食堂/维保等服务类标题
+  - id: goods_or_software
+    required: true
+    text: 本次目标为货物或软件向办公设备
+  - id: budget_mode
+    required: true
+    text: 写明 test 或 formal 额度，禁止无上限
+  - id: keyword_split
+    required: true
+    text: 多关键词均分额度，禁止一词吃光
+  - id: local_first
+    required: true
+    text: 先吃 scout_data / 已有 fold_runs，再决定加码 API
+  - id: species_anchor
+    required: true
+    text: 拉取后分析前必须物种锚定（公安局=公安局）

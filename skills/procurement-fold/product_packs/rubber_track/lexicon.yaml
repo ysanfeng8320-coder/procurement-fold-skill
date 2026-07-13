@@ -1,0 +1,28 @@
+pack_id: rubber_track
+display_name: 塑胶跑道
+canonical_product: 塑胶跑道
+
+target:
+  - 塑胶跑道
+  - 合成材料面层
+  - 运动场塑胶
+
+near:
+  - 塑胶场地
+  - 塑胶面层
+  - 跑道改造
+
+related:
+  - 体育场地
+  - 田径场
+
+confuse:
+  - 塑胶地板
+  - 塑胶管
+
+search_keywords:
+  - 塑胶跑道
+  - 塑胶场地
+
+high_value_systems: []
+systems: {}

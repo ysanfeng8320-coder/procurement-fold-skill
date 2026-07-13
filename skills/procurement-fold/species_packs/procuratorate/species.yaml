@@ -1,0 +1,25 @@
+species_id: procuratorate
+display_name: 检察院
+granularity: 检察院本级（分院/基层院）
+
+search_keywords:
+  - 人民检察院
+  - 检察分院
+
+bridge_prefixes:
+  - 检察院
+  - 人民检察院
+
+include_name_keywords:
+  - 人民检察院
+  - 检察分院
+  - 铁路运输检察
+
+exclude_name_keywords:
+  - 检察室
+
+level_rules:
+  省级: [省人民检察院, 人民检察院]
+  市级: [市人民检察院, 检察分院]
+  县级: [县人民检察院, 区人民检察院]
+  其他: []

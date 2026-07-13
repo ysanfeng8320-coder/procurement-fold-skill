@@ -1,0 +1,32 @@
+species_id: agriculture
+display_name: 农业局
+granularity: 农业农村局本级（厅/局；乡镇站所可排除）
+
+search_keywords:
+  - 农业农村局
+  - 农业局
+  - 农业农村厅
+
+bridge_prefixes:
+  - 农业农村局
+  - 农业局
+
+include_name_keywords:
+  - 农业农村局
+  - 农业局
+  - 农业农村厅
+  - 畜牧兽医局
+  - 农机中心
+
+exclude_name_keywords:
+  - 乡镇农业
+  - 村委会
+  - 合作社
+
+level_rules:
+  省级: [农业农村厅, 省农业]
+  市级: [市农业农村局, 市农业局]
+  县级: [县农业农村局, 区农业农村局, 县农业局]
+  其他: []
+
+discovery_hint: 农业系统办公设备采购公开度高，适合验证「非政法」物种是否可折叠。

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProductPackLexicon",
+  "type": "object",
+  "required": ["pack_id", "display_name", "target", "systems"],
+  "properties": {
+    "pack_id": { "type": "string" },
+    "display_name": { "type": "string" },
+    "canonical_product": { "type": "string", "description": "Canonical product label used in outputs" },
+    "target": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Strong hit keywords for the product itself"
+    },
+    "near": { "type": "array", "items": { "type": "string" } },
+    "related": { "type": "array", "items": { "type": "string" } },
+    "confuse": { "type": "array", "items": { "type": "string" } },
+    "search_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "API/local file search seeds (may overlap tiers)"
+    },
+    "systems": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "description": "buyer_system name -> substrings in buyer/title"
+    },
+    "high_value_systems": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Systems prioritized for similar_unbought leads"
+    }
+  }
+}

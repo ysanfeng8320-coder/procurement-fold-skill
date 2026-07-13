@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>采购折叠 · 总链路</title>
+<style>
+  :root {
+    --bg: #eef2f0;
+    --ink: #1a2a2a;
+    --muted: #5a6e6e;
+    --line: #c5d4d0;
+    --card: #ffffff;
+    --done: #1f6b5c;
+    --half: #c4a035;
+    --gap: #a65d3a;
+    --phase: #243d3a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #d9ebe4 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #e7e0d4 0%, transparent 50%),
+      var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0 0 8px;
+  }
+  header .sub { color: var(--muted); font-size: 15px; margin: 0 0 22px; max-width: 42em; }
+  .goal {
+    background: linear-gradient(135deg, #1f4f48, #2a6b5e);
+    color: #f3faf7;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    box-shadow: 0 10px 30px rgba(31,79,72,.22);
+  }
+  .goal .label { font-size: 12px; opacity: .8; letter-spacing: .08em; text-transform: uppercase; }
+  .goal .text { font-size: 18px; font-weight: 600; margin-top: 6px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px 16px;
+    font-size: 13px; color: var(--muted); margin-bottom: 18px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .dot.done { background: var(--done); }
+  .dot.half { background: #c4a035; }
+  .dot.gap { background: var(--gap); }
+
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .phase {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px 14px;
+    position: relative;
+  }
+  .phase.highlight {
+    border-color: #1f6b5c;
+    box-shadow: 0 0 0 3px rgba(31,107,92,.12);
+  }
+  .arrow {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 20px;
+  }
+  .arrow.loop {
+    color: var(--done);
+    font-size: 13px;
+    gap: 8px;
+  }
+  .top {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .badge {
+    background: var(--phase);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .title { font-size: 17px; font-weight: 700; }
+  .cadence {
+    font-size: 12px; color: var(--muted);
+    background: #f1f5f3; padding: 2px 8px; border-radius: 6px;
+  }
+  .status {
+    margin-left: auto;
+    font-size: 12px; font-weight: 600;
+    padding: 2px 8px; border-radius: 6px;
+  }
+  .status.done { background: #e5f4ef; color: var(--done); }
+  .status.half { background: #f8f1d8; color: #8a6a12; }
+  .status.gap { background: #f8e9e1; color: var(--gap); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 13px;
+    background: #f4f8f6;
+    border: 1px solid #d7e4df;
+    border-radius: 8px;
+    padding: 6px 10px;
+  }
+  .chip strong { font-weight: 600; }
+  .chip.missing {
+    background: #fbf3ee;
+    border-color: #eccbb8;
+    color: #7a3d22;
+  }
+  .note { margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+  .entries {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 22px 0 8px;
+  }
+  @media (max-width: 720px) { .entries { grid-template-columns: 1fr; } }
+  .entry {
+    background: var(--card);
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .entry h3 { margin: 0 0 6px; font-size: 14px; }
+  .entry p { margin: 0; font-size: 13px; color: var(--muted); }
+
+  .next {
+    margin-top: 28px;
+    background: #fff8f0;
+    border: 1px solid #efd7b8;
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .next h2 { margin: 0 0 8px; font-size: 16px; }
+  .next ol { margin: 0; padding-left: 18px; font-size: 14px; }
+  .next li { margin: 4px 0; }
+  footer { margin-top: 20px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>采购折叠 · 总链路</h1>
+    <p class="sub">像内容账号那张「阶段树」一样读：从上往下走；绿=已有，黄=半成品，橙=还缺。</p>
+  </header>
+
+  <div class="goal">
+    <div class="label">总目标（树根）</div>
+    <div class="text">找到能赚钱的「产品 × 场景 × 价带 × 渠道」，并变成陕甘能打电话的名单。</div>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot done"></i>已有可跑</span>
+    <span><i class="dot half"></i>半成品</span>
+    <span><i class="dot gap"></i>缺口（优先补）</span>
+  </div>
+
+  <div class="entries">
+    <div class="entry">
+      <h3>入口 A · 物种优先</h3>
+      <p>你说「法院/检察这周推什么」→ 从阶段 2 进阶段 4（run_fold）</p>
+    </div>
+    <div class="entry">
+      <h3>入口 B · 给品找场景</h3>
+      <p>你说「筛印控仪/装订机」→ 从阶段 3 场景拟合开始（你刚用过）</p>
+    </div>
+  </div>
+
+  <div class="flow">
+
+    <section class="phase highlight">
+      <div class="top">
+        <span class="badge">阶段 0</span>
+        <span class="title">商业问答（先挖已有认知）</span>
+        <span class="cadence">每次新用户强制 · 逐题等答</span>
+        <span class="status done">咨询式</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        来用的人通常<strong>已有产品、场景、客户、路径</strong>。先像 dbs 咨询一样问清楚，
+        不要一上来跑脚本，也不要替他「找对标产品」。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>产品</strong> 叫什么、解决什么</span>
+        <span class="chip"><strong>高低端</strong> 价带与利润</span>
+        <span class="chip"><strong>客户特质</strong> 法检/公安…</span>
+        <span class="chip"><strong>场景</strong> 为何买</span>
+        <span class="chip"><strong>路径</strong> 直客/集成商</span>
+        <span class="chip"><strong>成功样本</strong> 真单举例</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase highlight">
+      <div class="top">
+        <span class="badge">阶段 1</span>
+        <span class="title">上传资料 → 简易报告</span>
+        <span class="cadence">问答确认后</span>
+        <span class="status half">无 Key 可停在这里</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        引导上传产品/公司介绍（PPT、Word、PDF）、培训纪要、竞品材料。
+        无 API Key 时交付简易报告；完整招标分析需对方<strong>自备</strong>知了网/世舶 Key。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>PPT / Word / PDF</strong></span>
+        <span class="chip"><strong>公司介绍</strong></span>
+        <span class="chip"><strong>纪要 / 话术</strong></span>
+        <span class="chip missing">写入 product pack</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase">
+      <div class="top">
+        <span class="badge">阶段 2</span>
+        <span class="title">定位与包</span>
+        <span class="cadence">半固化配置</span>
+        <span class="status done">较完整</span>
+      </div>
+      <div class="chips">
+        <span class="chip"><strong>产品包</strong> 装订/碎纸/复印/印控…</span>
+        <span class="chip"><strong>系统包</strong> 法院/检察/公安/农业</span>
+        <span class="chip"><strong>区域</strong> 发现区学规律 · 陕甘落地</span>
+        <span class="chip missing">价带硬过滤（来自阶段1）</span>
+        <span class="chip missing">采集排除词（物业/食堂/保洁…）</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase" style="border-style:dashed;background:#f7faf9">
+      <div class="top">
+        <span class="badge" style="background:#6b4f2a">采集闸门</span>
+        <span class="title">先约束，再花钱拉数</span>
+        <span class="cadence">数据分析之前必过</span>
+        <span class="status gap">硬规则</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        好样本可能要千级～五千条硬投入，API 按条收费。
+        小样本只测流程；真分析前必须先定约束，否则物业招标进桶，钱白烧。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>只采货物/软件</strong></span>
+        <span class="chip"><strong>排除</strong> 物业、保洁、食堂、维保…</span>
+        <span class="chip"><strong>额度上限</strong> 测试 / 正式分开</span>
+        <span class="chip missing">闸门检查清单（不过闸不许调 API）</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase highlight">
+      <div class="top">
+        <span class="badge">阶段 3a</span>
+        <span class="title">数据分析（先锚定系统客户）</span>
+        <span class="cadence">数据到位后 · 每批必做</span>
+        <span class="status half">物种包已有</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        <strong>对，场景发现不能直接上。</strong>先做数据分析，且分析时必须先定死：这条单的买方属于哪个系统客户。
+        公安局就是公安局，检察院就是检察院——<strong>定点物种</strong>，不要再用早期那种把采购方揉成 a/b/c/d/e/f/g 的扁标签。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>物种锚定</strong> 法院 / 检察 / 公安 / 农业 / …</span>
+        <span class="chip"><strong>清洗</strong> 去重、日期、金额、标题命中</span>
+        <span class="chip"><strong>结构表</strong> 每条：物种 + 品 + 价带 + 月</span>
+        <span class="chip missing">标注质检（串物种、集成商冒充买方）</span>
+      </div>
+      <p class="note">采购方式/公告类型以后可能变；<strong>系统客户身份尽量不变</strong>。分析底座钉在物种上，后面规律才稳。</p>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase highlight">
+      <div class="top">
+        <span class="badge">阶段 3b</span>
+        <span class="title">寻找规律</span>
+        <span class="cadence">在物种切片上运算</span>
+        <span class="status half">引擎有 · 未收成阶段</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        有了「公安局切片 / 检察院切片」之后，再做统计与图推理：月度涌现、价带分布、跟风、关联缺口……
+        规律是<strong>按系统客户分开找</strong>的，不是全库一锅炖。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>按物种切片</strong> 再算共现/缺口/季节</span>
+        <span class="chip"><strong>统计规则</strong>（默认不上神经网络）</span>
+        <span class="chip"><strong>规律卡片</strong> 可检验、可反例</span>
+        <span class="chip missing">规律库回写（有效 / 弱 / 否决）</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase">
+      <div class="top">
+        <span class="badge">阶段 3c</span>
+        <span class="title">场景发现</span>
+        <span class="cadence">规律够用之后</span>
+        <span class="status half">拟合卡小样本已测</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        这时才问：这个品更该打哪个系统？用份额 × 密度 × 客单做拟合。
+        没有 3a 物种锚定 + 3b 规律，所谓「发现」只是标题相关，不可信。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>场景拟合</strong> 份额×密度×客单</span>
+        <span class="chip"><strong>印控仪</strong> 小样本已跑</span>
+        <span class="chip missing">装订机回测校准</span>
+        <span class="chip missing">大样本后再下结论</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase">
+      <div class="top">
+        <span class="badge">阶段 4</span>
+        <span class="title">名单制作</span>
+        <span class="cadence">每轮销售冲刺</span>
+        <span class="status half">半成品</span>
+      </div>
+      <div class="chips">
+        <span class="chip"><strong>缺口/跟风名单</strong> run_fold</span>
+        <span class="chip"><strong>品类×系统看板</strong> TPV</span>
+        <span class="chip missing">中标商渠道榜（你当年赚钱那步）</span>
+        <span class="chip missing">供货话术模板</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase highlight">
+      <div class="top">
+        <span class="badge">阶段 5</span>
+        <span class="title">行动前 · 电话补全（必做）</span>
+        <span class="cadence">每轮名单后强制跑</span>
+        <span class="status done">工具已就绪</span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:10px">
+        法院本人往往没公开电话。补全策略：本地公告抠号 → 买方/参照单位中标商 →
+        物种渠道池有号优先 → 可选小额度 API。输出「直联」或「经集成商联系：XX☎…」。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>phone_complete.py</strong> 已接入</span>
+        <span class="chip"><strong>本地 harvest</strong> scout→contacts.json</span>
+        <span class="chip"><strong>经集成商路径</strong></span>
+        <span class="chip"><strong>run_fold --phone-complete</strong></span>
+      </div>
+      <p class="note">人打电话仍是人做；skill 必须先把号补到可行动，禁止名单只有单位名。</p>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase">
+      <div class="top">
+        <span class="badge">阶段 5b</span>
+        <span class="title">行动</span>
+        <span class="cadence">人来做</span>
+        <span class="status half">人用报告</span>
+      </div>
+      <div class="chips">
+        <span class="chip">按 contact_display 外呼</span>
+        <span class="chip">谈供货 / 转介绍</span>
+      </div>
+    </section>
+    <div class="arrow">↓</div>
+
+    <section class="phase">
+      <div class="top">
+        <span class="badge">阶段 6</span>
+        <span class="title">验证复盘</span>
+        <span class="cadence">按周 / 按季度窗</span>
+        <span class="status half">有报表 · 缺回写</span>
+      </div>
+      <div class="chips">
+        <span class="chip"><strong>训练→预测→验证</strong></span>
+        <span class="chip"><strong>品类×系统同页</strong></span>
+        <span class="chip missing">把有效边写回阶段 2/3</span>
+      </div>
+    </section>
+
+    <div class="arrow loop">↑ 复盘结论回到「数据分析 / 找规律 / 场景发现」· 形成闭环</div>
+  </div>
+
+  <div class="next">
+    <h2>下一刀（按你刚说的排）</h2>
+    <ol>
+      <li>阶段 1：资料投喂（培训/纪要/PPT/Word → 自家+竞品）</li>
+      <li>采集闸门：排除词 + 额度上限（已有配置，可继续硬化）</li>
+      <li>阶段 3a：每条单必须标死系统客户</li>
+      <li>阶段 4：中标商渠道榜（与电话补全已打通一截）</li>
+      <li>阶段 5：名单后<strong>必须</strong>跑电话补全（已做）</li>
+    </ol>
+  </div>
+
+  <footer>
+    文字版详情：skills/procurement-fold/ORCHESTRATION.md · 本页只为好看易懂
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PortfolioScore",
+  "type": "object",
+  "required": ["product_pack", "score", "band", "rationale"],
+  "properties": {
+    "product_pack": { "type": "string" },
+    "display_name": { "type": "string" },
+    "score": { "type": "number" },
+    "band": { "type": "string", "enum": ["高", "中", "低"] },
+    "rationale": { "type": "array", "items": { "type": "string" } },
+    "factors": { "type": "object" }
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "采购折叠 procurement-fold"
+  short_description: "政府采购结构折叠：物种/产品入口→闸门→分析→场景拟合→名单→电话补全。触发词：procurement-fold、采购折叠、场景拟合、法院采购、印控仪、装订机、中标商渠道。"
+  default_prompt: "使用 skill procurement-fold。先运行 python3 skills/procurement-fold/scripts/doctor.py。若通过：对 seal_control 跑场景拟合（fold/scene_fit.py），用浏览器打开报告，并用中文摘要拟合结论；若用户指定了物种则改跑 run_fold.py 并 --phone-complete。"

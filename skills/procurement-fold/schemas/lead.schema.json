@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FoldLead",
+  "type": "object",
+  "required": ["buyer", "region", "lead_type", "matched_rules", "evidence", "suggested_action", "actionable"],
+  "properties": {
+    "buyer": { "type": "string" },
+    "region": { "type": "string" },
+    "buyer_system": { "type": "string" },
+    "lead_type": {
+      "type": "string",
+      "enum": ["similar_unbought", "assoc_gap"]
+    },
+    "priority": { "type": "string", "enum": ["P0", "P1", "P2"] },
+    "matched_rules": { "type": "array", "items": { "type": "string" } },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "date": { "type": "string" },
+          "hit_tier": { "type": "string" },
+          "source_id": { "type": ["string", "number", "null"] }
+        }
+      }
+    },
+    "gap_detail": { "type": "string" },
+    "suggested_action": { "type": "string" },
+    "actionable": { "type": "boolean" },
+    "action_blocker": { "type": ["string", "null"] },
+    "contact": { "type": ["string", "null"] }
+  }
+}
